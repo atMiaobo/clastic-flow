@@ -71,5 +71,9 @@ Testing/
 # Rust
 /target/
 
+# Obsidian plugin build
+/node_modules/
+/main.js
+
 # Nix
 /result

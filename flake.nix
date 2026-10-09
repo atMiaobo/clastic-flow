@@ -53,6 +53,7 @@
         devShells.default = pkgs.mkShell {
           packages = [
             pkgs.cargo
+            pkgs.nodejs_22
             pkgs.rustc
             pkgs.rustfmt
             pkgs.quickshell

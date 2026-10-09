@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ $# -ne 1 ]]; then
+  echo "usage: scripts/install-obsidian-plugin /path/to/ObsidianVault" >&2
+  exit 2
+fi
+
+vault_path=$1
+plugin_dir="$vault_path/.obsidian/plugins/wpm-rt"
+
+if [[ ! -d "$vault_path/.obsidian" ]]; then
+  echo "not an Obsidian vault: $vault_path" >&2
+  exit 1
+fi
+
+if [[ ! -f main.js ]]; then
+  echo "main.js is missing; run npm run build first" >&2
+  exit 1
+fi
+
+mkdir -p "$plugin_dir"
+cp main.js manifest.json styles.css "$plugin_dir/"
+
+echo "Installed WPM RT to $plugin_dir"
