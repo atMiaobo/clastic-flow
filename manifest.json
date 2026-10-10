@@ -1,10 +1,10 @@
 {
-  "id": "wpm-rt",
-  "name": "WPM RT",
+  "id": "clastic-type",
+  "name": "clastic type",
   "version": "0.1.0",
   "minAppVersion": "1.5.0",
   "description": "Realtime typing speed in the status bar, with overall and per-note averages.",
-  "author": "MIRO",
+  "author": "miaobo",
   "authorUrl": "",
   "isDesktopOnly": false
 }
