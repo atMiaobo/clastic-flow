@@ -1,71 +1,71 @@
-.wpm-rt-status {
+.clastic-flow-status {
   font-variant-numeric: tabular-nums;
   order: -999;
 }
 
-.wpm-rt-view {
-  --wpm-rt-border: var(--background-modifier-border);
-  --wpm-rt-muted: var(--text-muted);
+.clastic-flow-view {
+  --clastic-flow-border: var(--background-modifier-border);
+  --clastic-flow-muted: var(--text-muted);
 }
 
-.wpm-rt-title {
+.clastic-flow-title {
   margin: 0 0 16px;
 }
 
-.wpm-rt-section-title {
+.clastic-flow-section-title {
   margin: 18px 0 6px;
   font-size: var(--font-ui-medium);
   font-weight: 600;
 }
 
-.wpm-rt-section-subtitle {
+.clastic-flow-section-subtitle {
   margin: 0 0 8px;
-  color: var(--wpm-rt-muted);
+  color: var(--clastic-flow-muted);
   font-size: var(--font-ui-smaller);
   overflow-wrap: anywhere;
 }
 
-.wpm-rt-grid {
+.clastic-flow-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
   gap: 8px;
   margin-bottom: 20px;
 }
 
-.wpm-rt-stat {
-  border: 1px solid var(--wpm-rt-border);
+.clastic-flow-stat {
+  border: 1px solid var(--clastic-flow-border);
   border-radius: 6px;
   padding: 10px;
   background: var(--background-secondary);
 }
 
-.wpm-rt-label {
-  color: var(--wpm-rt-muted);
+.clastic-flow-label {
+  color: var(--clastic-flow-muted);
   font-size: var(--font-ui-smaller);
   margin-bottom: 4px;
 }
 
-.wpm-rt-value {
+.clastic-flow-value {
   font-size: 20px;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
-.wpm-rt-table {
+.clastic-flow-table {
   width: 100%;
   border-collapse: collapse;
   font-size: var(--font-ui-small);
 }
 
-.wpm-rt-table th,
-.wpm-rt-table td {
-  border-bottom: 1px solid var(--wpm-rt-border);
+.clastic-flow-table th,
+.clastic-flow-table td {
+  border-bottom: 1px solid var(--clastic-flow-border);
   padding: 8px 6px;
   text-align: left;
   vertical-align: top;
 }
 
-.wpm-rt-table th {
-  color: var(--wpm-rt-muted);
+.clastic-flow-table th {
+  color: var(--clastic-flow-muted);
   font-weight: 600;
 }

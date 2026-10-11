@@ -12,7 +12,7 @@ import {
 import { Transaction } from "@codemirror/state";
 import { EditorView, ViewUpdate } from "@codemirror/view";
 
-const VIEW_TYPE_WPM_STATS = "wpm-rt-stats";
+const VIEW_TYPE_WPM_STATS = "clastic-flow-stats";
 
 interface WpmRtSettings {
   rollingWindowMs: number;
@@ -151,12 +151,13 @@ export default class WpmRtPlugin extends Plugin {
   private samples: TypingSample[] = [];
   private activeFilePath: string | null = null;
   private saveTimer: number | null = null;
+  private lastStatsRefreshAt = 0;
 
   async onload() {
     await this.loadStoredData();
 
     this.statusBarEl = this.addStatusBarItem();
-    this.statusBarEl.addClass("wpm-rt-status");
+    this.statusBarEl.addClass("clastic-flow-status");
     this.statusBarEl.setText("wpm: 0");
     this.positionStatusBarItemStart();
 
@@ -170,29 +171,33 @@ export default class WpmRtPlugin extends Plugin {
       this.app.workspace.on("active-leaf-change", () => this.updateActiveFile())
     );
     this.registerEvent(
-      this.app.workspace.on("file-open", () => this.updateActiveFile())
+      this.app.workspace.on("file-open", (file) => this.updateActiveFile(file))
     );
 
     this.registerInterval(
       window.setInterval(() => {
-        this.pruneSamples(Date.now());
+        const now = Date.now();
+        this.pruneSamples(now);
         this.updateStatusBar();
+        if (now - this.lastStatsRefreshAt >= 1000) {
+          this.refreshStatsViews();
+        }
       }, 250)
     );
 
-    this.addRibbonIcon("gauge", "Open WPM stats", () => this.activateStatsView());
+    this.addRibbonIcon("gauge", "Open Clastic Flow stats", () => this.activateStatsView());
     this.addCommand({
-      id: "open-wpm-stats",
-      name: "Open typing speed stats",
+      id: "open-clastic-flow-stats",
+      name: "Open Clastic Flow stats",
       callback: () => this.activateStatsView()
     });
     this.addCommand({
-      id: "reset-current-note-wpm-stats",
+      id: "reset-current-note-clastic-flow-stats",
       name: "Reset current note typing stats",
       callback: () => this.resetCurrentNoteStats()
     });
     this.addCommand({
-      id: "reset-all-wpm-stats",
+      id: "reset-all-clastic-flow-stats",
       name: "Reset all typing stats",
       callback: () => this.resetAllStats()
     });
@@ -241,11 +246,52 @@ export default class WpmRtPlugin extends Plugin {
     }, 1000);
   }
 
-  private updateActiveFile() {
-    const view = this.app.workspace.getActiveViewOfType(MarkdownView);
-    this.activeFilePath = view?.file?.path ?? null;
+  private updateActiveFile(file?: TFile | null) {
+    if (file) {
+      this.activeFilePath = file.path;
+    } else {
+      this.rememberActiveMarkdownFile();
+    }
+
     this.updateStatusBar();
     this.refreshStatsViews();
+  }
+
+  private rememberActiveMarkdownFile() {
+    const activeView = this.app.workspace.activeLeaf?.view;
+    if (activeView instanceof MarkdownView && activeView.file) {
+      this.activeFilePath = activeView.file.path;
+      return;
+    }
+
+    if (this.activeFilePath) {
+      return;
+    }
+
+    for (const leaf of this.app.workspace.getLeavesOfType("markdown")) {
+      const view = leaf.view;
+      if (view instanceof MarkdownView && view.file) {
+        this.activeFilePath = view.file.path;
+        return;
+      }
+    }
+
+    this.activeFilePath = this.getMostRecentNotePath();
+  }
+
+  private getMostRecentNotePath(): string | null {
+    let latestPath: string | null = null;
+    let latestTypedAt = 0;
+
+    for (const [path, stats] of Object.entries(this.data.notes)) {
+      const typedAt = Number(stats.lastTypedAt) || 0;
+      if (typedAt > latestTypedAt) {
+        latestPath = path;
+        latestTypedAt = typedAt;
+      }
+    }
+
+    return latestPath;
   }
 
   private handleEditorUpdate(update: ViewUpdate) {
@@ -279,6 +325,7 @@ export default class WpmRtPlugin extends Plugin {
     this.samples.push({ at: now, chars });
     this.pruneSamples(now);
     this.updateStatusBar();
+    this.refreshStatsViews();
     this.queueSave();
   }
 
@@ -322,6 +369,7 @@ export default class WpmRtPlugin extends Plugin {
   }
 
   getCurrentNoteStats(): StoredNoteStats {
+    this.rememberActiveMarkdownFile();
     if (!this.activeFilePath) {
       return cloneEmptyStats();
     }
@@ -330,6 +378,7 @@ export default class WpmRtPlugin extends Plugin {
   }
 
   getCurrentNotePath(): string | null {
+    this.rememberActiveMarkdownFile();
     return this.activeFilePath;
   }
 
@@ -354,6 +403,7 @@ export default class WpmRtPlugin extends Plugin {
   }
 
   async activateStatsView() {
+    this.rememberActiveMarkdownFile();
     const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_WPM_STATS);
     const leaf = leaves[0] ?? this.app.workspace.getRightLeaf(false);
     if (!leaf) {
@@ -366,6 +416,7 @@ export default class WpmRtPlugin extends Plugin {
   }
 
   refreshStatsViews() {
+    this.lastStatsRefreshAt = Date.now();
     for (const leaf of this.app.workspace.getLeavesOfType(VIEW_TYPE_WPM_STATS)) {
       const view = leaf.view;
       if (view instanceof WpmStatsView) {
@@ -420,10 +471,10 @@ class WpmStatsView extends ItemView {
   render() {
     const { contentEl } = this;
     contentEl.empty();
-    contentEl.addClass("wpm-rt-view");
+    contentEl.addClass("clastic-flow-view");
 
     const heading = contentEl.createEl("h2", { text: "Typing speed" });
-    heading.addClass("wpm-rt-title");
+    heading.addClass("clastic-flow-title");
 
     const currentStats = this.plugin.getCurrentNoteStats();
     this.addSection(
@@ -457,8 +508,8 @@ class WpmStatsView extends ItemView {
       ["Bursts", this.plugin.data.overall.bursts.toLocaleString()]
     ]);
 
-    contentEl.createEl("h3", { cls: "wpm-rt-section-title", text: "Notes" });
-    const table = contentEl.createEl("table", { cls: "wpm-rt-table" });
+    contentEl.createEl("h3", { cls: "clastic-flow-section-title", text: "Notes" });
+    const table = contentEl.createEl("table", { cls: "clastic-flow-table" });
     const thead = table.createEl("thead");
     const headerRow = thead.createEl("tr");
     for (const label of ["Note", "Average", "Characters", "Active time", "Bursts"]) {
@@ -493,21 +544,21 @@ class WpmStatsView extends ItemView {
     subtitle: string | null,
     stats: Array<[string, string]>
   ) {
-    parent.createEl("h3", { cls: "wpm-rt-section-title", text: title });
+    parent.createEl("h3", { cls: "clastic-flow-section-title", text: title });
     if (subtitle) {
-      parent.createDiv({ cls: "wpm-rt-section-subtitle", text: subtitle });
+      parent.createDiv({ cls: "clastic-flow-section-subtitle", text: subtitle });
     }
 
-    const grid = parent.createDiv({ cls: "wpm-rt-grid" });
+    const grid = parent.createDiv({ cls: "clastic-flow-grid" });
     for (const [label, value] of stats) {
       this.addStat(grid, label, value);
     }
   }
 
   private addStat(parent: HTMLElement, label: string, value: string) {
-    const item = parent.createDiv({ cls: "wpm-rt-stat" });
-    item.createDiv({ cls: "wpm-rt-label", text: label });
-    item.createDiv({ cls: "wpm-rt-value", text: value });
+    const item = parent.createDiv({ cls: "clastic-flow-stat" });
+    item.createDiv({ cls: "clastic-flow-label", text: label });
+    item.createDiv({ cls: "clastic-flow-value", text: value });
   }
 }
 
@@ -520,7 +571,7 @@ class WpmRtSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    containerEl.createEl("h2", { text: "WPM RT" });
+    containerEl.createEl("h2", { text: "Clastic Flow" });
 
     new Setting(containerEl)
       .setName("Rolling live window")

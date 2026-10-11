@@ -1,9 +1,9 @@
 {
-  "id": "clastic-type",
-  "name": "clastic type",
+  "id": "clastic-flow",
+  "name": "Clastic Flow",
   "version": "0.1.0",
   "minAppVersion": "1.5.0",
-  "description": "Realtime typing speed in the status bar, with overall and per-note averages.",
+  "description": "Realtime typing speed in the status bar, with active-time stats per note.",
   "author": "miaobo",
   "authorUrl": "",
   "isDesktopOnly": false

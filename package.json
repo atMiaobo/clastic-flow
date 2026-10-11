@@ -1,7 +1,7 @@
 {
-  "name": "obsidian-wpm-rt",
+  "name": "obsidian-clastic-flow",
   "version": "0.1.0",
-  "description": "Realtime WPM status bar and typing stats for Obsidian.",
+  "description": "Realtime typing speed in the status bar, with active-time stats per note.",
   "main": "main.js",
   "scripts": {
     "dev": "node esbuild.config.mjs --watch",

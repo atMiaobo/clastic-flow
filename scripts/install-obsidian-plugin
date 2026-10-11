@@ -7,7 +7,7 @@ if [[ $# -ne 1 ]]; then
 fi
 
 vault_path=$1
-plugin_dir="$vault_path/.obsidian/plugins/wpm-rt"
+plugin_dir="$vault_path/.obsidian/plugins/clastic-flow"
 
 if [[ ! -d "$vault_path/.obsidian" ]]; then
   echo "not an Obsidian vault: $vault_path" >&2
@@ -22,4 +22,4 @@ fi
 mkdir -p "$plugin_dir"
 cp main.js manifest.json styles.css "$plugin_dir/"
 
-echo "Installed WPM RT to $plugin_dir"
+echo "Installed Clastic Flow to $plugin_dir"
