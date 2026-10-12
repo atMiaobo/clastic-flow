@@ -187,17 +187,17 @@ export default class WpmRtPlugin extends Plugin {
 
     this.addRibbonIcon("gauge", "Open Clastic Flow stats", () => this.activateStatsView());
     this.addCommand({
-      id: "open-clastic-flow-stats",
-      name: "Open Clastic Flow stats",
+      id: "open-stats",
+      name: "Open stats",
       callback: () => this.activateStatsView()
     });
     this.addCommand({
-      id: "reset-current-note-clastic-flow-stats",
+      id: "reset-current-note-stats",
       name: "Reset current note typing stats",
       callback: () => this.resetCurrentNoteStats()
     });
     this.addCommand({
-      id: "reset-all-clastic-flow-stats",
+      id: "reset-all-stats",
       name: "Reset all typing stats",
       callback: () => this.resetAllStats()
     });
@@ -258,9 +258,9 @@ export default class WpmRtPlugin extends Plugin {
   }
 
   private rememberActiveMarkdownFile() {
-    const activeView = this.app.workspace.activeLeaf?.view;
-    if (activeView instanceof MarkdownView && activeView.file) {
-      this.activeFilePath = activeView.file.path;
+    const activeMarkdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
+    if (activeMarkdownView?.file) {
+      this.activeFilePath = activeMarkdownView.file.path;
       return;
     }
 
@@ -412,7 +412,7 @@ export default class WpmRtPlugin extends Plugin {
     }
 
     await leaf.setViewState({ type: VIEW_TYPE_WPM_STATS, active: true });
-    this.app.workspace.revealLeaf(leaf);
+    this.app.workspace.setActiveLeaf(leaf, true, true);
   }
 
   refreshStatsViews() {
@@ -571,7 +571,7 @@ class WpmRtSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    containerEl.createEl("h2", { text: "Clastic Flow" });
+    new Setting(containerEl).setName("Clastic Flow").setHeading();
 
     new Setting(containerEl)
       .setName("Rolling live window")
@@ -643,7 +643,7 @@ class WpmRtSettingTab extends PluginSettingTab {
       .addButton((button) =>
         button
           .setButtonText("Reset")
-          .setWarning()
+          .setDestructive()
           .onClick(() => this.plugin.resetAllStats())
       );
   }
