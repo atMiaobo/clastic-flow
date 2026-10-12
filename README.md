@@ -1,5 +1,5 @@
 ### clastic flow
-Minimalist lightweight real-time wpm monitor for Obsidian with stats dashboard.
+a minimalist lightweight real-time wpm monitor for Obsidian with stats dashboard.
 
 Clastic Flow is a lightweight Obsidian plugin that shows your typing speed in real time while you're editing your notes. Additionally for thou scholarly goblins, Clastic Flow aggregates your typing statistics per document using a more sophisticated method than the naive troglodyte pea-sized homoheidelbergensis chaff filled brain approach, actively monitoring only the active typing sessions. Review your aggregate statistics across all notes and individual notes.
 
