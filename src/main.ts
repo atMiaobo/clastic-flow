@@ -412,7 +412,6 @@ export default class WpmRtPlugin extends Plugin {
     }
 
     await leaf.setViewState({ type: VIEW_TYPE_WPM_STATS, active: true });
-    this.app.workspace.setActiveLeaf(leaf, true, true);
   }
 
   refreshStatsViews() {
@@ -570,8 +569,6 @@ class WpmRtSettingTab extends PluginSettingTab {
   display(): void {
     const { containerEl } = this;
     containerEl.empty();
-
-    new Setting(containerEl).setName("Settings").setHeading();
 
     new Setting(containerEl)
       .setName("Rolling live window")

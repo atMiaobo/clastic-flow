@@ -1,6 +1,6 @@
 {
   "name": "obsidian-clastic-flow",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Realtime typing speed in the status bar, with active-time stats per note.",
   "main": "main.js",
   "scripts": {
