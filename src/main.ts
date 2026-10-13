@@ -6,6 +6,7 @@ import {
   Plugin,
   PluginSettingTab,
   Setting,
+  SettingDefinitionItem,
   TFile,
   WorkspaceLeaf
 } from "obsidian";
@@ -564,6 +565,89 @@ class WpmStatsView extends ItemView {
 class WpmRtSettingTab extends PluginSettingTab {
   constructor(app: App, private plugin: WpmRtPlugin) {
     super(app, plugin);
+  }
+
+  getSettingDefinitions(): SettingDefinitionItem<keyof WpmRtSettings>[] {
+    return [
+      {
+        name: "Rolling live window",
+        desc: "Milliseconds of recent typing used for the status bar value.",
+        aliases: ["live wpm", "status bar", "window"],
+        control: {
+          type: "number",
+          key: "rollingWindowMs",
+          defaultValue: DEFAULT_SETTINGS.rollingWindowMs,
+          min: 500,
+          step: 100
+        }
+      },
+      {
+        name: "Pause grace",
+        desc: "Pauses up to this many milliseconds count as active typing. Longer pauses are discarded.",
+        aliases: ["idle timeout", "active time", "typing burst"],
+        control: {
+          type: "number",
+          key: "pauseGraceMs",
+          defaultValue: DEFAULT_SETTINGS.pauseGraceMs,
+          min: 500,
+          step: 100
+        }
+      },
+      {
+        name: "Average word length",
+        desc: "Characters per word for WPM conversion. The original app used 4.8.",
+        aliases: ["word length", "wpm conversion"],
+        control: {
+          type: "number",
+          key: "wordLength",
+          defaultValue: DEFAULT_SETTINGS.wordLength,
+          min: 0.1,
+          step: "any"
+        }
+      },
+      {
+        name: "Maximum characters per edit",
+        desc: "Edits above this size are treated as paste/autocomplete and ignored.",
+        aliases: ["paste filter", "autocomplete filter", "bulk edit"],
+        control: {
+          type: "number",
+          key: "maxCharsPerEdit",
+          defaultValue: DEFAULT_SETTINGS.maxCharsPerEdit,
+          min: 1,
+          step: 1
+        }
+      },
+      {
+        name: "Reset all stats",
+        desc: "Clears overall and per-note typing history.",
+        aliases: ["clear stats", "delete stats"],
+        action: () => {
+          void this.plugin.resetAllStats();
+        }
+      }
+    ];
+  }
+
+  getControlValue(key: keyof WpmRtSettings): unknown {
+    return this.plugin.data.settings[key];
+  }
+
+  async setControlValue(key: keyof WpmRtSettings, value: unknown) {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed)) {
+      return;
+    }
+
+    if (key === "wordLength" && parsed <= 0) {
+      return;
+    }
+
+    if (key !== "wordLength" && parsed < 1) {
+      return;
+    }
+
+    this.plugin.data.settings[key] = parsed;
+    await this.plugin.saveStoredData();
   }
 
   display(): void {
