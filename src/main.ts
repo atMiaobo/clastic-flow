@@ -571,7 +571,7 @@ class WpmRtSettingTab extends PluginSettingTab {
     const { containerEl } = this;
     containerEl.empty();
 
-    new Setting(containerEl).setName("Clastic Flow").setHeading();
+    new Setting(containerEl).setName("Settings").setHeading();
 
     new Setting(containerEl)
       .setName("Rolling live window")
@@ -643,7 +643,6 @@ class WpmRtSettingTab extends PluginSettingTab {
       .addButton((button) =>
         button
           .setButtonText("Reset")
-          .setDestructive()
           .onClick(() => this.plugin.resetAllStats())
       );
   }
