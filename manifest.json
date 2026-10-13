@@ -1,7 +1,7 @@
 {
   "id": "clastic-flow",
   "name": "Clastic Flow",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "minAppVersion": "1.13.0",
   "description": "Realtime typing speed in the status bar, with active-time stats per note.",
   "author": "miaobo",

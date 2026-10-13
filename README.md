@@ -101,7 +101,7 @@ Releases are built by GitHub Actions so the uploaded assets have artifact attest
 3. Create a GitHub release with a tag exactly matching `manifest.json`'s version.
 
 ```bash
-gh release create 0.1.4 --title "0.1.4" --notes "Release notes here."
+gh release create 0.1.5 --title "0.1.5" --notes "Release notes here."
 ```
 
 Do not upload `main.js`, `manifest.json`, or `styles.css` manually. The release workflow builds, attests, and uploads those files.
