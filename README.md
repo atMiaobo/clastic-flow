@@ -108,5 +108,5 @@ Do not upload `main.js`, `manifest.json`, or `styles.css` manually. The release 
 
 ### Gallery
 
-<img width="1982" height="1513" alt="2026-10-15_04-27-03_area" src="https://github.com/user-attachments/assets/b7d6405e-e107-40c4-801b-059fd3d89e3e" />
+<img width="2529" height="1508" alt="image" src="https://github.com/user-attachments/assets/ba267b8a-1351-44fd-96c6-464a57c56cf0" />
 
