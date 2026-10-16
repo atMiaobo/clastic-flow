@@ -108,5 +108,8 @@ Do not upload `main.js`, `manifest.json`, or `styles.css` manually. The release 
 
 ### Gallery
 
+<img width="179" height="44" alt="image" src="https://github.com/user-attachments/assets/c7ad4f89-36fc-4386-b8bc-7e00989e7fa5" />
+
+
 <img width="2529" height="1508" alt="image" src="https://github.com/user-attachments/assets/ba267b8a-1351-44fd-96c6-464a57c56cf0" />
 
