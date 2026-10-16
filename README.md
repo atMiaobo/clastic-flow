@@ -92,19 +92,6 @@ To install a local build into a vault:
 scripts/install-obsidian-plugin /path/to/YourVault
 ```
 
-### Release
-
-Releases are built by GitHub Actions so the uploaded assets have artifact attestations.
-
-1. Bump the same version in `manifest.json`, `package.json`, and `package-lock.json`.
-2. Commit and push the change.
-3. Create a GitHub release with a tag exactly matching `manifest.json`'s version.
-
-```bash
-gh release create 0.1.5 --title "0.1.5" --notes "Release notes here."
-```
-
-Do not upload `main.js`, `manifest.json`, or `styles.css` manually. The release workflow builds, attests, and uploads those files.
 
 ### Gallery
 
