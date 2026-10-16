@@ -106,4 +106,7 @@ gh release create 0.1.5 --title "0.1.5" --notes "Release notes here."
 
 Do not upload `main.js`, `manifest.json`, or `styles.css` manually. The release workflow builds, attests, and uploads those files.
 
-### Gallery 
+### Gallery
+
+<img width="1982" height="1513" alt="2026-10-15_04-27-03_area" src="https://github.com/user-attachments/assets/b7d6405e-e107-40c4-801b-059fd3d89e3e" />
+
